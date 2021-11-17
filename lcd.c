@@ -2,7 +2,7 @@
 #include "oledfont.h"
 #include "delay.h"
 #include "bmp.h"
-u16 BACK_COLOR;    //背景色
+u16 BACK_COLOR;   //背景色
 
 /******************************************************************************
       函数说明：LCD串行数据写入函数
@@ -10,12 +10,19 @@ u16 BACK_COLOR;    //背景色
       返回值：  无
 ******************************************************************************/
 void LCD_Writ_Bus(u8 dat) 
-{          
-    U1DBUF=dat;    
-    while(U1TX_BYTE==0);    
-    U1TX_BYTE=0;  
+{	
+	u8 i;			  
+	for(i=0;i<8;i++)
+	{			  
+		OLED_SCLK_Clr();
+		if(dat&0x80)
+		   OLED_SDIN_Set();
+		else 
+		   OLED_SDIN_Clr();
+		OLED_SCLK_Set();
+		dat<<=1;   
+	}			
 }
-
 
 
 /******************************************************************************
